@@ -58,8 +58,12 @@
     <div id="igrica">
         <div id="igrac">🧑</div>
     </div>
+    <div id="strelice" style="margin-top: 1.5rem; display: flex; gap: 2rem;">
+        <button id="lijevo" style="font-size:2rem;padding:0.7em 1.2em;border-radius:50%;border:none;background:#e6f2ff;box-shadow:0 2px 8px #99ccee;cursor:pointer;">⬅️</button>
+        <button id="desno" style="font-size:2rem;padding:0.7em 1.2em;border-radius:50%;border:none;background:#e6f2ff;box-shadow:0 2px 8px #99ccee;cursor:pointer;">➡️</button>
+    </div>
     <div id="score">Rezultat: 0</div>
-    <div id="upute">Koristi ← i → za pomicanje</div>
+    <div id="upute">Koristi ← i → za pomicanje ili strelice ispod</div>
     <script>
         const igrica = document.getElementById('igrica');
         const igrac = document.getElementById('igrac');
@@ -68,19 +72,26 @@
         let igracX = 170;
         const igracWidth = 40;
 
-        // Pomicanje igraca
+        // Pomicanje igraca tipkama
         document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowLeft') {
-                igracX -= 30;
-                if (igracX < 0) igracX = 0;
-                igrac.style.left = igracX + 'px';
-            }
-            if (e.key === 'ArrowRight') {
-                igracX += 30;
-                if (igracX > 360) igracX = 360;
-                igrac.style.left = igracX + 'px';
-            }
+            if (e.key === 'ArrowLeft') pomakniLijevo();
+            if (e.key === 'ArrowRight') pomakniDesno();
         });
+
+        // Pomicanje igraca strelicama
+        document.getElementById('lijevo').addEventListener('click', pomakniLijevo);
+        document.getElementById('desno').addEventListener('click', pomakniDesno);
+
+        function pomakniLijevo() {
+            igracX -= 30;
+            if (igracX < 0) igracX = 0;
+            igrac.style.left = igracX + 'px';
+        }
+        function pomakniDesno() {
+            igracX += 30;
+            if (igracX > 360) igracX = 360;
+            igrac.style.left = igracX + 'px';
+        }
 
         // Padajući itemi
         function stvoriItem() {
@@ -132,4 +143,3 @@
 </body>
 </html>
 
-           
