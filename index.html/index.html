@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Skupljaj cuke!</title>
+    <style>
+        body {
+            background: #b3e0ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #003366;
+            margin-top: 2rem;
+        }
+        #igrica {
+            position: relative;
+            width: 400px;
+            height: 500px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 20px;
+            box-shadow: 0 0 20px #99ccee;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        #igrac {
+            position: absolute;
+            bottom: 10px;
+            left: 170px;
+            font-size: 2.5rem;
+            transition: left 0.1s;
+            user-select: none;
+        }
+        .item {
+            position: absolute;
+            font-size: 2.2rem;
+            user-select: none;
+            pointer-events: none;
+        }
+        #score {
+            font-size: 1.3rem;
+            color: #003366;
+            margin-top: 1rem;
+        }
+        #upute {
+            color: #005580;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Skupljaj 🐶, izbjegavaj 🐱!</h1>
+    <div id="igrica">
+        <div id="igrac">🧑</div>
+    </div>
+    <div id="score">Rezultat: 0</div>
+    <div id="upute">Koristi ← i → za pomicanje</div>
+    <script>
+        const igrica = document.getElementById('igrica');
+        const igrac = document.getElementById('igrac');
+        const scoreDiv = document.getElementById('score');
+        let score = 0;
+        let igracX = 170;
+        const igracWidth = 40;
+
+        // Pomicanje igraca
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') {
+                igracX -= 30;
+                if (igracX < 0) igracX = 0;
+                igrac.style.left = igracX + 'px';
+            }
+            if (e.key === 'ArrowRight') {
+                igracX += 30;
+                if (igracX > 360) igracX = 360;
+                igrac.style.left = igracX + 'px';
+            }
+        });
+
+        // Padajući itemi
+        function stvoriItem() {
+            const item = document.createElement('div');
+            item.className = 'item';
+            // Nasumično biramo emoji
+            const jeCuko = Math.random() < 0.5;
+            item.textContent = jeCuko ? '🐶' : '🐱';
+            item.dataset.cuko = jeCuko ? '1' : '0';
+            item.style.left = Math.floor(Math.random() * 360) + 'px';
+            item.style.top = '-40px';
+            igrica.appendChild(item);
+
+            let y = -40;
+            const brzina = 2 + Math.random() * 2;
+
+            function pad() {
+                y += brzina;
+                item.style.top = y + 'px';
+
+                // Sudar s igracem
+                const itemX = parseInt(item.style.left);
+                if (
+                    y > 430 &&
+                    itemX + 40 > igracX &&
+                    itemX < igracX + igracWidth
+                ) {
+                    if (item.dataset.cuko === '1') {
+                        score++;
+                        scoreDiv.textContent = 'Rezultat: ' + score;
+                    }
+                    item.remove();
+                    return;
+                }
+
+                // Ispod dna
+                if (y > 500) {
+                    item.remove();
+                    return;
+                }
+                requestAnimationFrame(pad);
+            }
+            pad();
+        }
+
+        // Generiraj iteme svakih 800ms
+        setInterval(stvoriItem, 800);
+    </script>
+</body>
+</html>
+
+           
